@@ -20,15 +20,15 @@ function filterSH(W::DDK, cnm, snm)
         lastindex = 0
 
         for iblk in 1:W.nblocks
-            order = floor(iblk/2) |> Int
+            order = iblk ÷ 2
 
             order > nmaxout && break
 
-            trig = floor(mod(iblk+ (iblk > 1), 2)) |> Int
+            trig = mod(iblk + (iblk > 1), 2)
 
-            sz = W.blockind[iblk] - lastblckind
+            sz = W.blockind[iblk] - lastblckind |> Int
 
-            blockn = diag(ones(nmaxfilt+1-order))
+            blockn = diagm(ones(nmaxfilt+1-order))
             nminblk = max(nminfilt, order)
 
             shft = nminblk - order + 1
@@ -42,7 +42,7 @@ function filterSH(W::DDK, cnm, snm)
             end
 
             lastblckind = W.blockind[iblk]
-            lastindex = lastindex + sz^2
+            lastindex += sz^2
         end
 
     else
